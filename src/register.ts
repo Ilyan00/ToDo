@@ -1,4 +1,4 @@
-namespace inscription {
+namespace register {
   const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
 
@@ -8,14 +8,13 @@ namespace inscription {
     const formDataObject = Object.fromEntries(data.entries());
 
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formDataObject),
       });
-
       if (response) {
         const result = await response.json();
         console.log("Réponse du serveur :", result);
@@ -37,6 +36,6 @@ namespace inscription {
     }
   };
 
-  const form = document.querySelector<HTMLFormElement>(".form-connexion");
+  const form = document.querySelector<HTMLFormElement>(".form-register");
   form?.addEventListener("submit", handleSubmit);
 }
