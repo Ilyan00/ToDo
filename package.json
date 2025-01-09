@@ -1,15 +1,27 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "npx tsc --watch"
+    "dev": "node dist/index.js",
+    "build": "npx tsc --watch"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.12",
     "bcrypt-ts": "^5.0.3",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "motion": "^11.16.0"
-  }
+  },
+  "name": "todo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
