@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.12",
+    "bcrypt-ts": "^5.0.3",
+    "dotenv": "^16.4.7",
+    "motion": "^11.16.0"
+  }
+}
