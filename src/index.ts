@@ -3,7 +3,6 @@ import supabase from "./supabaseClient.js";
 import path from "path";
 import { hashPassword } from "./hash.js";
 import { fileURLToPath } from "url";
-import { User } from "@supabase/supabase-js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +22,7 @@ app.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
+    // S'il manque des informations
     res.status(400).json({
       success: false,
       message: "Veuillez remplir tous les champs.",
@@ -30,6 +30,7 @@ app.post("/login", async (req: Request, res: Response) => {
     return;
   }
 
+  // Vérification des informations
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -54,6 +55,7 @@ app.post("/register", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
+    // S'il manque des informations
     res.status(400).json({
       success: false,
       message: "Veuillez remplir tous les champs.",
@@ -61,6 +63,7 @@ app.post("/register", async (req: Request, res: Response) => {
     return;
   }
   try {
+    // Ajout d'un utilisateur
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -74,6 +77,8 @@ app.post("/register", async (req: Request, res: Response) => {
       });
       return;
     }
+
+    // Ajout à la base de données
     const pwd = await hashPassword(password);
     const { data: userData, error: dbError } = await supabase
       .from("user")
@@ -107,6 +112,7 @@ app.post("/register", async (req: Request, res: Response) => {
 
 // Route pour recuperer les tâches d'un user
 app.get("/task", async (req: Request, res: Response) => {
+  // Vérification de l'utilisateur connecté
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
     res.status(400).json({
@@ -115,8 +121,9 @@ app.get("/task", async (req: Request, res: Response) => {
     });
     return;
   }
+
+  // Récupération des tâches de l'utilisateur connecté
   const { data, error } = await supabase
-    // Récupération des tâches de l'utilisateur connecté
     .from("tache")
     .select("*")
     .eq("user", userLogged.user.id);
@@ -136,6 +143,7 @@ app.get("/task", async (req: Request, res: Response) => {
 
 // Route pour publier une tâche
 app.post("/add_task", async (req: Request, res: Response) => {
+  // Vérification de l'utilisateur connecté
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
     res.status(400).json({
@@ -144,8 +152,9 @@ app.post("/add_task", async (req: Request, res: Response) => {
     });
     return;
   }
-  const { title, description, deadline } = req.body;
 
+  const { title, description, deadline } = req.body;
+  // S'il manque des informations
   if (!title || !description || !deadline) {
     res.status(400).json({
       success: false,
@@ -153,8 +162,9 @@ app.post("/add_task", async (req: Request, res: Response) => {
     });
     return;
   }
-  const id = userLogged.user.id;
 
+  // Ajout de la tâche à la base de données
+  const id = userLogged.user.id;
   const { data: taskData, error: dbError } = await supabase
     .from("tache")
     .insert({
@@ -182,6 +192,7 @@ app.post("/add_task", async (req: Request, res: Response) => {
 
 // Route pour mettre à jour une tâche
 app.put("/update_task", async (req: Request, res: Response) => {
+  // Vérification de l'utilisateur connecté
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
     res.status(400).json({
@@ -190,8 +201,9 @@ app.put("/update_task", async (req: Request, res: Response) => {
     });
     return;
   }
-  const { id, title, description, deadline } = req.body;
 
+  // S'il manque des informations
+  const { id, title, description, deadline } = req.body;
   if (!title || !description || !deadline) {
     res.status(400).json({
       success: false,
@@ -200,6 +212,7 @@ app.put("/update_task", async (req: Request, res: Response) => {
     return;
   }
 
+  // Modification des informations
   const updatedData: any = {};
   if (title) updatedData.title = title;
   if (description) updatedData.description = description;
@@ -250,8 +263,9 @@ app.put("/update_task", async (req: Request, res: Response) => {
   }
 });
 
-// Route pour mettre à jour une tâche
+// Route pour supprimer une tâche
 app.delete("/delete_task", async (req: Request, res: Response) => {
+  // Vérification de l'utilisateur connecté
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
     res.status(400).json({
@@ -261,6 +275,7 @@ app.delete("/delete_task", async (req: Request, res: Response) => {
     return;
   }
   try {
+    // S'il manque des informations
     const { id } = req.body;
     if (!id) {
       res.status(400).json({
@@ -269,6 +284,8 @@ app.delete("/delete_task", async (req: Request, res: Response) => {
       });
       return;
     }
+
+    // Suppression de la tâche de la base de données
     const { data: existingData, error: fetchError } = await supabase
       .from("tache")
       .select("*")
@@ -320,7 +337,9 @@ app.delete("/delete_task", async (req: Request, res: Response) => {
   }
 });
 
+// Route pour changer le statut d'une tâche
 app.put("/status_task", async (req: Request, res: Response) => {
+  // Vérification de l'utilisateur connecté
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
     res.status(400).json({
@@ -329,6 +348,8 @@ app.put("/status_task", async (req: Request, res: Response) => {
     });
     return;
   }
+
+  // S'il manque des informations
   const { id, status } = req.body;
   if (!id || typeof status !== "boolean") {
     res.status(400).json({
@@ -339,6 +360,7 @@ app.put("/status_task", async (req: Request, res: Response) => {
   }
 
   try {
+    // Vérification que la tache existe
     const { data: existingData, error: fetchError } = await supabase
       .from("tache")
       .select("id")
@@ -353,6 +375,7 @@ app.put("/status_task", async (req: Request, res: Response) => {
       return;
     }
 
+    // Modification du status
     const { data, error } = await supabase
       .from("tache")
       .update({ status: status })
