@@ -56,12 +56,19 @@ namespace task {
               }
             });
           } else {
-            alert(
-              `Une erreur est survenue lors de la modification, ${result.message}`
-            );
+            // Sinon on affiche l'erreur
+            const message_error = document.getElementById("error-task");
+            if (message_error) {
+              message_error.innerHTML =
+                "Erreur de la modification de la tache : " + result.message;
+            }
           }
         } else {
-          alert("Une erreur est survenue lors de la connexion.");
+          const message_error = document.getElementById("error-task");
+          if (message_error) {
+            message_error.innerHTML =
+              "Une erreur est survenue lors de la connexion.";
+          }
         }
       });
     });
@@ -85,13 +92,29 @@ namespace task {
 
       if (result.success) {
         taskElement.remove();
+        const tasks = await getTasks();
+        // S'il n'y a plus de tache
+        if (tasks.length === 0) {
+          const all_task_container = document.querySelector(".all-task");
+          if (all_task_container) {
+            all_task_container.innerHTML = "Aucune tâche à afficher.";
+          }
+          return;
+        }
       } else {
-        alert(
-          `Une erreur est survenue lors de la suppression, ${result.message}`
-        );
+        // Sinon on affiche l'erreur
+        const message_error = document.getElementById("error-task");
+        if (message_error) {
+          message_error.innerHTML =
+            "Erreur de la suppression de la tache : " + result.message;
+        }
       }
     } else {
-      alert("Une erreur est survenue lors de la connexion.");
+      const message_error = document.getElementById("error-task");
+      if (message_error) {
+        message_error.innerHTML =
+          "Une erreur est survenue lors de la connexion.";
+      }
     }
   };
 
@@ -116,6 +139,14 @@ namespace task {
       NewdeleteButton = document.createElement("button");
       NewdeleteButton.classList.add("delete-btn");
       NewdeleteButton.textContent = "Supprimer la tâche";
+
+      NewdeleteButton?.addEventListener("click", () => {
+        delete_task(taskElement);
+      });
+
+      NeweditButton?.addEventListener("click", () => {
+        update_task(taskElement);
+      });
     }
 
     const taskId = taskElement.dataset.taskId;
@@ -149,12 +180,19 @@ namespace task {
           container.appendChild(taskElement);
         }
       } else {
-        alert(
-          `Une erreur est survenue lors de la mise à jour, ${result.message}`
-        );
+        // Sinon on affiche l'erreur
+        const message_error = document.getElementById("error-task");
+        if (message_error) {
+          message_error.innerHTML =
+            "Erreur du changement de status de la tache : " + result.message;
+        }
       }
     } else {
-      alert("Une erreur est survenue lors de la connexion.");
+      const message_error = document.getElementById("error-task");
+      if (message_error) {
+        message_error.innerHTML =
+          "Une erreur est survenue lors de la connexion.";
+      }
     }
   };
 
@@ -185,7 +223,10 @@ namespace task {
     const tasks = await getTasks();
 
     if (!tasks || tasks.length === 0) {
-      console.log("Aucune tâche trouvée.");
+      const all_task_container = document.querySelector(".all-task");
+      if (all_task_container) {
+        all_task_container.innerHTML = "Aucune tâche à afficher.";
+      }
       return;
     }
 

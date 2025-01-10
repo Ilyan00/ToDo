@@ -1,4 +1,5 @@
 namespace add_task {
+  // fonction pour ajouter une task quand le formulaire est submit
   const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
 
@@ -8,6 +9,7 @@ namespace add_task {
     const formDataObject = Object.fromEntries(data.entries());
 
     try {
+      // Appelle de l'ajout d'une task
       const response = await fetch("/add_task", {
         method: "POST",
         headers: {
@@ -18,14 +20,16 @@ namespace add_task {
 
       if (response) {
         const result = await response.json();
-        console.log("Réponse du serveur :", result);
 
         if (result.success) {
+          // Recharge la page en cas de success
           window.location.href = "./form_task_add";
         } else {
-          const message_error = document.getElementById("error-connexion");
+          // Sinon on affiche l'erreur
+          const message_error = document.getElementById("error-task");
           if (message_error) {
-            message_error.innerHTML = "Erreur de connexion : " + result.message;
+            message_error.innerHTML =
+              "Erreur d'ajout de la tache : " + result.message;
           }
         }
       } else {
