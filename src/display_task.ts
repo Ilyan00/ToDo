@@ -37,7 +37,8 @@ namespace add_task {
             <p class="editable title">${task.title}</p>
             <p class="editable description">${task.description}</p>
             <p class="editable date">${task.deadline}</p>
-            <button class="edit-btn">Modifier les tâches</button>
+            <button class="edit-btn">Modifier les informations</button>
+            <button class="delete-btn">Supprimer la tache</button>
           </div>
         `;
       });
@@ -45,6 +46,33 @@ namespace add_task {
       const task_containers = document.querySelectorAll(".task");
       task_containers.forEach((taskElement: any) => {
         const editButton = taskElement.querySelector(".edit-btn");
+        const deleteButton = taskElement.querySelector(".delete-btn");
+
+        deleteButton?.addEventListener("click", async () => {
+          const taskId = taskElement.dataset.taskId;
+          const response = await fetch(`/delete_task`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: taskId }),
+          });
+          if (response) {
+            const result = await response.json();
+
+            if (result.success) {
+              alert("Tache supprimé");
+              taskElement.remove();
+            } else {
+              alert(
+                `Une erreur est survenue lors de la suppression, ${result.message}`
+              );
+            }
+          } else {
+            alert("Une erreur est survenue lors de la connexion.");
+          }
+        });
+
         editButton?.addEventListener("click", () => {
           const paragraphs = taskElement.querySelectorAll("p.editable");
           paragraphs.forEach((p: HTMLElement) => {

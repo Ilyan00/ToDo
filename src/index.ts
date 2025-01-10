@@ -12,10 +12,9 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Pour gérer les formulaires
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Middleware pour analyser les corps JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,7 +30,6 @@ app.post("/login", async (req: Request, res: Response) => {
     return;
   }
 
-  // Authentification avec Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -51,6 +49,7 @@ app.post("/login", async (req: Request, res: Response) => {
   }
 });
 
+// Route pour ajouter un user
 app.post("/register", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -106,6 +105,7 @@ app.post("/register", async (req: Request, res: Response) => {
   }
 });
 
+// Route pour recuperer les tâches d'un user
 app.get("/task", async (req: Request, res: Response) => {
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
@@ -134,6 +134,7 @@ app.get("/task", async (req: Request, res: Response) => {
   });
 });
 
+// Route pour publier une tâche
 app.post("/add_task", async (req: Request, res: Response) => {
   const { data: userLogged, error: authError } = await supabase.auth.getUser();
   if (authError || !userLogged) {
@@ -181,6 +182,14 @@ app.post("/add_task", async (req: Request, res: Response) => {
 
 // Route pour mettre à jour une tâche
 app.put("/update_task", async (req: Request, res: Response) => {
+  const { data: userLogged, error: authError } = await supabase.auth.getUser();
+  if (authError || !userLogged) {
+    res.status(400).json({
+      success: false,
+      message: "Aucun utilisateur connecté",
+    });
+    return;
+  }
   const { id, title, description, deadline } = req.body;
 
   if (!title || !description || !deadline) {
@@ -200,7 +209,7 @@ app.put("/update_task", async (req: Request, res: Response) => {
     const { data: existingData, error: fetchError } = await supabase
       .from("tache")
       .select("id")
-      .eq("id", "b30e877c-8653-41fb-95f5-8f2229a28953")
+      .eq("id", id)
       .single();
 
     if (!existingData) {
@@ -241,18 +250,87 @@ app.put("/update_task", async (req: Request, res: Response) => {
   }
 });
 
-// Servir une page de connexion
+// Route pour mettre à jour une tâche
+app.delete("/delete_task", async (req: Request, res: Response) => {
+  const { data: userLogged, error: authError } = await supabase.auth.getUser();
+  if (authError || !userLogged) {
+    res.status(400).json({
+      success: false,
+      message: "Aucun utilisateur connecté",
+    });
+    return;
+  }
+  try {
+    const { id } = req.body;
+    if (!id) {
+      res.status(400).json({
+        success: false,
+        message: "Veuillez fournir l'ID de la tâche à supprimer.",
+      });
+      return;
+    }
+    const { data: existingData, error: fetchError } = await supabase
+      .from("tache")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (!existingData) {
+      res.status(404).json({
+        success: false,
+        message: "Aucune tâche trouvée avec cet ID.",
+      });
+      return;
+    }
+
+    if (existingData.user != userLogged.user.id) {
+      res.status(403).json({
+        success: false,
+        message:
+          "Vous ne pouvez pas supprimer une tâche qui ne vous appartient pas.",
+      });
+      return;
+    }
+    const { data: deleteData, error: deleteError } = await supabase
+      .from("tache")
+      .delete()
+      .eq("id", id);
+
+    if (deleteError) {
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la suppression de la tâche.",
+        error: deleteError.message,
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: "Tâche supprimée avec succès.",
+      data: deleteData,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur.",
+      error: error.message,
+    });
+    return;
+  }
+});
+
+// Afficher la page de connexion et d'inscription
 app.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "../", "login.html"));
 });
 
-app.get("/dashboard", (req: Request, res: Response) => {
-  res.send("<h1>Bienvenue sur le tableau de bord !</h1>");
-});
+// Afficher la page des ToDo
 app.get("/form_task_add", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "../", "form_task_add.html"));
 });
 
+// Lancer le serv
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
