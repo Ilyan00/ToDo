@@ -1,4 +1,5 @@
 namespace inscription {
+  // fonction pour ajouter une task quand le formulaire est submit
   const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
 
@@ -8,6 +9,7 @@ namespace inscription {
     const formDataObject = Object.fromEntries(data.entries());
 
     try {
+      // Appelle de la connexion
       const response = await fetch("/login", {
         method: "POST",
         headers: {
@@ -21,8 +23,10 @@ namespace inscription {
         console.log("Réponse du serveur :", result);
 
         if (result.success) {
+          // Redirection vers la page d'ajout de tâches si la connexion est réussie
           window.location.href = "./form_task_add";
         } else {
+          // Sinon on affiche l'erreur
           const message_error = document.getElementById("error-connexion");
           if (message_error) {
             message_error.innerHTML = "Erreur de connexion : " + result.message;

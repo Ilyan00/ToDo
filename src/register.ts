@@ -1,4 +1,5 @@
 namespace register {
+  // fonction pour ajouter une task quand le formulaire est submit
   const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
 
@@ -8,6 +9,7 @@ namespace register {
     const formDataObject = Object.fromEntries(data.entries());
 
     try {
+      // Appelle de l'inscription
       const response = await fetch("/register", {
         method: "POST",
         headers: {
@@ -17,11 +19,12 @@ namespace register {
       });
       if (response) {
         const result = await response.json();
-        console.log("Réponse du serveur :", result);
 
         if (result.success) {
+          // Redirection vers la page d'ajout de tâche
           window.location.href = "./form_task_add";
         } else {
+          // Sinon on affiche le message d'erreur
           const message_error = document.getElementById("error-connexion");
           if (message_error) {
             message_error.innerHTML = "Erreur de connexion : " + result.message;
