@@ -1,6 +1,167 @@
-namespace add_task {
+namespace task {
+  // fonction pour modifier une tache
+  const update_task = (taskElement: HTMLElement) => {
+    const paragraphs = taskElement.querySelectorAll("p.editable");
+
+    paragraphs.forEach((p) => {
+      // Modification des textes en input
+      const currentValue = p.textContent || "";
+      const input = document.createElement("input");
+      if (p.classList.contains("date")) {
+        input.type = "date";
+        input.value = currentValue;
+      } else {
+        input.type = "text";
+        input.value = currentValue;
+      }
+      p.classList.forEach((cls: any) => input.classList.add(cls));
+      input.classList.remove("editable");
+      p.replaceWith(input);
+
+      input.addEventListener("blur", async (event) => {
+        const input_title: any = taskElement.querySelector(".title");
+        const input_description: any =
+          taskElement.querySelector(".description");
+        const input_deadline: any = taskElement.querySelector(".date");
+
+        const taskId = taskElement.dataset.taskId;
+
+        const updatedTask = {
+          id: taskId,
+          title: input_title?.value,
+          description: input_description?.value,
+          deadline: input_deadline?.value,
+        };
+
+        // Appelle de la modification avec les nouvelle valeurs
+        const response = await fetch(`/update_task`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTask),
+        });
+
+        if (response) {
+          const result = await response.json();
+
+          if (result.success) {
+            // Rétablir les inputs en paragraphes
+            taskElement.querySelectorAll("input").forEach((input) => {
+              if (input.type !== "checkbox") {
+                const p = document.createElement("p");
+                p.classList.add("editable", ...input.classList);
+                p.textContent = input.value;
+                input.replaceWith(p);
+              }
+            });
+          } else {
+            alert(
+              `Une erreur est survenue lors de la modification, ${result.message}`
+            );
+          }
+        } else {
+          alert("Une erreur est survenue lors de la connexion.");
+        }
+      });
+    });
+  };
+
+  // fonction pour supprimer une tache
+  const delete_task = async (taskElement: HTMLElement) => {
+    const taskId = taskElement.dataset.taskId;
+
+    // Appelle de la suppression
+    const response = await fetch(`/delete_task`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: taskId }),
+    });
+    if (response) {
+      // Enleve
+      const result = await response.json();
+
+      if (result.success) {
+        taskElement.remove();
+      } else {
+        alert(
+          `Une erreur est survenue lors de la suppression, ${result.message}`
+        );
+      }
+    } else {
+      alert("Une erreur est survenue lors de la connexion.");
+    }
+  };
+
+  const change_status = async (
+    editButton: HTMLButtonElement,
+    deleteButton: HTMLButtonElement,
+    taskElement: HTMLElement,
+    statusInput: HTMLInputElement,
+    container: HTMLElement,
+    container_done: HTMLElement
+  ) => {
+    // initialisé les btns
+    let NeweditButton = editButton;
+    let NewdeleteButton = deleteButton;
+
+    // Si les boutons n'existent pas, les créer dynamiquement
+    if (!editButton || !deleteButton) {
+      NeweditButton = document.createElement("button");
+      NeweditButton.classList.add("edit-btn");
+      NeweditButton.textContent = "Modifier les informations";
+
+      NewdeleteButton = document.createElement("button");
+      NewdeleteButton.classList.add("delete-btn");
+      NewdeleteButton.textContent = "Supprimer la tâche";
+    }
+
+    const taskId = taskElement.dataset.taskId;
+    const status = statusInput.checked;
+
+    // Appelle de la modification du status
+    const response = await fetch(`/status_task`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: taskId, status: status }),
+    });
+
+    if (response) {
+      const result = await response.json();
+
+      if (result.success) {
+        taskElement.remove();
+
+        if (status) {
+          // Si la tâche est marquée comme terminée, la déplacer vers le container_done
+          container_done.appendChild(taskElement);
+          // Supprimer les boutons d'édition et de suppression si présents
+          taskElement.querySelector(".edit-btn")?.remove();
+          taskElement.querySelector(".delete-btn")?.remove();
+        } else {
+          // Si la tâche est réactivée, la remettre dans le container et ajouter les boutons
+          taskElement.appendChild(NeweditButton);
+          taskElement.appendChild(NewdeleteButton);
+          container.appendChild(taskElement);
+        }
+      } else {
+        alert(
+          `Une erreur est survenue lors de la mise à jour, ${result.message}`
+        );
+      }
+    } else {
+      alert("Une erreur est survenue lors de la connexion.");
+    }
+  };
+
+  // fonction pour recuperer toute les taches du user connecté
   const getTasks = async () => {
     try {
+      // Appelle de la récupération des tâches
       const response = await fetch("/task", {
         method: "GET",
       });
@@ -30,29 +191,40 @@ namespace add_task {
 
     const container = document.getElementById("tasks-container");
     const container_done = document.getElementById("tasks-done-container");
-    if (container && container_done) {
+    const template = document.getElementsByClassName("task-template")[0];
+
+    if (container && container_done && template) {
       container.innerHTML = "";
       tasks.forEach((task: any) => {
+        // Changement des informations
+        const taskCard = template.cloneNode(true) as HTMLElement;
+        taskCard.classList.remove("task-template");
+        taskCard.classList.add("task");
+
+        taskCard.dataset.taskId = task.id.toString();
+        taskCard.style.display = "block";
+
+        const title = taskCard.querySelector(".title") as HTMLElement;
+        const description = taskCard.querySelector(
+          ".description"
+        ) as HTMLElement;
+        const deadline = taskCard.querySelector(".date") as HTMLElement;
+        const statusInput = taskCard.querySelector(
+          ".status-input"
+        ) as HTMLInputElement;
+
+        title.textContent = task.title;
+        description.textContent = task.description;
+        deadline.textContent = task.deadline;
+        statusInput.checked = task.status;
+
+        // Ajout des taches dans le container correspondant
         if (!task.status) {
-          container.innerHTML += `
-          <div class="task" data-task-id="${task.id}">
-            <input type="checkbox" name="status" id="status-input" class="status-input" />
-            <p class="editable title">${task.title}</p>
-            <p class="editable description">${task.description}</p>
-            <p class="editable date">${task.deadline}</p>
-            <button class="edit-btn">Modifier les informations</button>
-            <button class="delete-btn">Supprimer la tache</button>
-          </div>
-        `;
+          container.appendChild(taskCard);
         } else {
-          container_done.innerHTML += `
-          <div class="task" data-task-id="${task.id}">
-            <input type="checkbox" name="status" id="status-input" class="status-input" checked  />
-            <p class="editable title">${task.title}</p>
-            <p class="editable description">${task.description}</p>
-            <p class="editable date">${task.deadline}</p>
-          </div>
-        `;
+          taskCard.querySelector(".edit-btn")?.remove();
+          taskCard.querySelector(".delete-btn")?.remove();
+          container_done.appendChild(taskCard);
         }
       });
 
@@ -62,132 +234,24 @@ namespace add_task {
         const deleteButton = taskElement.querySelector(".delete-btn");
         const statusInput = taskElement.querySelector(".status-input");
 
-        statusInput?.addEventListener("change", async () => {
-          const NeweditButton = editButton;
-          const NewdeleteButton = deleteButton;
-          if (!editButton || !deleteButton) {
-            const NeweditButton = document.createElement("button");
-            NeweditButton.classList.add("edit-btn");
-            NeweditButton.textContent = "Modifier les informations";
-
-            const NewdeleteButton = document.createElement("button");
-            NewdeleteButton.classList.add("delete-btn");
-            NewdeleteButton.textContent = "Supprimer la tache";
-          }
-
-          const taskId = taskElement.dataset.taskId;
-          const status = statusInput.checked;
-
-          const response = await fetch(`/status_task`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: taskId, status: status }),
-          });
-
-          if (response) {
-            const result = await response.json();
-
-            if (result.success) {
-              taskElement.remove();
-              if (status) {
-                container_done.appendChild(taskElement);
-                taskElement.querySelector(".edit-btn").remove();
-                taskElement.querySelector(".delete-btn").remove();
-              } else {
-                taskElement.appendChild(deleteButton);
-                taskElement.appendChild(editButton);
-                container.appendChild(taskElement);
-              }
-            } else {
-              alert(
-                `Une erreur est survenue lors de la suppression, ${result.message}`
-              );
-            }
-          } else {
-            alert("Une erreur est survenue lors de la connexion.");
-          }
+        // Ajout des evenements pour chaque task
+        statusInput?.addEventListener("change", () => {
+          change_status(
+            editButton,
+            deleteButton,
+            taskElement,
+            statusInput,
+            container,
+            container_done
+          );
         });
 
-        deleteButton?.addEventListener("click", async () => {
-          const taskId = taskElement.dataset.taskId;
-          const response = await fetch(`/delete_task`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: taskId }),
-          });
-          if (response) {
-            const result = await response.json();
-
-            if (result.success) {
-              taskElement.remove();
-            } else {
-              alert(
-                `Une erreur est survenue lors de la suppression, ${result.message}`
-              );
-            }
-          } else {
-            alert("Une erreur est survenue lors de la connexion.");
-          }
+        deleteButton?.addEventListener("click", () => {
+          delete_task(taskElement);
         });
 
         editButton?.addEventListener("click", () => {
-          const paragraphs = taskElement.querySelectorAll("p.editable");
-          paragraphs.forEach((p: HTMLElement) => {
-            const currentValue = p.textContent || "";
-            const input = document.createElement("input");
-            if (p.classList.contains("date")) {
-              input.type = "date";
-              input.value = currentValue;
-            } else {
-              input.type = "text";
-              input.value = currentValue;
-            }
-            p.classList.forEach((cls: any) => input.classList.add(cls));
-            input.classList.remove("editable");
-            p.replaceWith(input);
-
-            input.addEventListener("blur", async (event) => {
-              const input_title: any = taskElement.querySelector(".title");
-              const input_description: any =
-                taskElement.querySelector(".description");
-              const input_deadline: any = taskElement.querySelector(".date");
-
-              const taskId = taskElement.dataset.taskId;
-
-              const updatedTask = {
-                id: taskId,
-                title: input_title?.value,
-                description: input_description?.value,
-                deadline: input_deadline?.value,
-              };
-
-              const response = await fetch(`/update_task`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedTask),
-              });
-
-              if (response) {
-                const result = await response.json();
-
-                if (result.success) {
-                  alert("Modification prit en compte");
-                } else {
-                  alert(
-                    `Une erreur est survenue lors de la modification, ${result.message}`
-                  );
-                }
-              } else {
-                alert("Une erreur est survenue lors de la connexion.");
-              }
-            });
-          });
+          update_task(taskElement);
         });
       });
     } else {

@@ -20,7 +20,21 @@
       <br />
       <button type="submit">Se connecter</button>
     </form>
+
     <h2>pas done</h2>
+    <div class="task-template" style="display: none">
+      <input
+        type="checkbox"
+        name="status"
+        id="status-input"
+        class="status-input"
+      />
+      <p class="editable title"></p>
+      <p class="editable description"></p>
+      <p class="editable date"></p>
+      <button class="edit-btn">Modifier les informations</button>
+      <button class="delete-btn">Supprimer la tache</button>
+    </div>
     <div id="tasks-container"></div>
     <h2>done</h2>
     <div id="tasks-done-container"></div>
