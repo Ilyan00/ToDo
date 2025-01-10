@@ -320,6 +320,69 @@ app.delete("/delete_task", async (req: Request, res: Response) => {
   }
 });
 
+app.put("/status_task", async (req: Request, res: Response) => {
+  const { data: userLogged, error: authError } = await supabase.auth.getUser();
+  if (authError || !userLogged) {
+    res.status(400).json({
+      success: false,
+      message: "Aucun utilisateur connecté",
+    });
+    return;
+  }
+  const { id, status } = req.body;
+  if (!id || typeof status !== "boolean") {
+    res.status(400).json({
+      success: false,
+      message: "Veuillez fournir un ID de tâche et un état valide.",
+    });
+    return;
+  }
+
+  try {
+    const { data: existingData, error: fetchError } = await supabase
+      .from("tache")
+      .select("id")
+      .eq("id", id)
+      .single();
+
+    if (!existingData) {
+      res.status(404).json({
+        success: false,
+        message: "Aucune tâche trouvée avec cet ID.",
+      });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("tache")
+      .update({ status: status })
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la mise à jour du status.",
+        error: error.message,
+      });
+      return;
+    }
+    res.json({
+      success: true,
+      message: "Mise à jour du status de la tache faite avec succès.",
+      data: data,
+    });
+    return;
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur.",
+      error: error.message,
+    });
+    return;
+  }
+});
+
 // Afficher la page de connexion et d'inscription
 app.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "../", "login.html"));
