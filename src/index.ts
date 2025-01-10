@@ -152,9 +152,7 @@ app.post("/add_task", async (req: Request, res: Response) => {
     });
     return;
   }
-  console.log(userLogged.user.id);
   const id = userLogged.user.id;
-  console.log(id);
 
   const { data: taskData, error: dbError } = await supabase
     .from("tache")
@@ -166,7 +164,6 @@ app.post("/add_task", async (req: Request, res: Response) => {
       user: id,
     });
 
-  console.log(dbError);
   if (dbError) {
     res.status(400).json({
       success: false,
@@ -180,6 +177,68 @@ app.post("/add_task", async (req: Request, res: Response) => {
     message: "Tâche ajoutée avec succès",
     data: taskData,
   });
+});
+
+// Route pour mettre à jour une tâche
+app.put("/update_task", async (req: Request, res: Response) => {
+  const { id, title, description, deadline } = req.body;
+
+  if (!title || !description || !deadline) {
+    res.status(400).json({
+      success: false,
+      message: "Veuillez fournir au moins un champ à mettre à jour.",
+    });
+    return;
+  }
+
+  const updatedData: any = {};
+  if (title) updatedData.title = title;
+  if (description) updatedData.description = description;
+  if (deadline) updatedData.deadline = new Date(deadline);
+
+  try {
+    const { data: existingData, error: fetchError } = await supabase
+      .from("tache")
+      .select("id")
+      .eq("id", "b30e877c-8653-41fb-95f5-8f2229a28953")
+      .single();
+
+    if (!existingData) {
+      res.status(404).json({
+        success: false,
+        message: "Aucune tâche trouvée avec cet ID.",
+      });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("tache")
+      .update(updatedData)
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la mise à jour de la tâche.",
+        error: error.message,
+      });
+      return;
+    }
+    res.json({
+      success: true,
+      message: "Tâche mise à jour avec succès.",
+      data: data,
+    });
+    return;
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur.",
+      error: error.message,
+    });
+    return;
+  }
 });
 
 // Servir une page de connexion
