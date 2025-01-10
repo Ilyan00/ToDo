@@ -20,7 +20,7 @@ namespace register {
         console.log("Réponse du serveur :", result);
 
         if (result.success) {
-          window.location.href = "/todo.html";
+          window.location.href = "./form_task_add";
         } else {
           const message_error = document.getElementById("error-connexion");
           if (message_error) {

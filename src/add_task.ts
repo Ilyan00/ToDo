@@ -1,4 +1,4 @@
-namespace inscription {
+namespace add_task {
   const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
 
@@ -8,7 +8,7 @@ namespace inscription {
     const formDataObject = Object.fromEntries(data.entries());
 
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("/add_task", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +37,8 @@ namespace inscription {
     }
   };
 
-  const form = document.querySelector<HTMLFormElement>(".form-connexion");
-  form?.addEventListener("submit", handleSubmit);
+  const form = document.querySelectorAll<HTMLFormElement>(".form-task");
+  if (form.length > 0) {
+    form.forEach((f) => f.addEventListener("submit", handleSubmit));
+  }
 }
