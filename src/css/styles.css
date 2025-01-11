@@ -44,7 +44,7 @@ header {
   padding-inline: 60px;
   height: 113px;
   width: 100%;
-  background-color: #d9d9d9;
+  background-color: #444141;
   display: flex;
   align-items: center;
 }
@@ -58,39 +58,33 @@ header {
 .logo {
   display: flex;
   align-items: center;
-  color: #555555;
+  color: #fff;
   font-size: 2rem;
   gap: 26px;
 }
 
-.logo p span {
-  color: #55555534;
+.lightgrey {
+  color: rgba(255, 255,255 , .3);
 }
-
-.ligthgrey {
-  color: #555555;
-  opacity: 33%;
-}
-
 
 
 .param_box {
   width: 49px;
   height: 49px;
-  background-color: #e0e0e0;
+  background-color: #555;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
-     -3px -3px 5px
+     -2px -2px 5px
       rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
 .param_box:active {
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-             inset -3px -3px 5px rgba(255, 255, 255, 0.7);
+             inset -2px -2px 5px rgba(255, 255, 255, 0.7);
 }   
 
 /* MAIN */
