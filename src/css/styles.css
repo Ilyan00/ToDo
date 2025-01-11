@@ -64,9 +64,8 @@ header {
 }
 
 .lightgrey {
-  color: rgba(255, 255,255 , .3);
+  color: rgba(255, 255, 255, 0.3);
 }
-
 
 .param_box {
   width: 49px;
@@ -77,15 +76,14 @@ header {
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
-     -2px -2px 5px
-      rgba(255, 255, 255, 0.7);
+    -2px -2px 5px rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
 .param_box:active {
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-             inset -2px -2px 5px rgba(255, 255, 255, 0.7);
-}   
+    inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+}
 
 /* MAIN */
 main {
@@ -100,9 +98,8 @@ main {
   border-radius: 40px;
   padding: 20px 50px;
   margin: auto;
-  box-shadow:3px 3px 5px rgba(0, 0, 0, 0.2),
-     -3px -3px 5px
-      rgba(255, 255, 255, 0.7);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
+    -3px -3px 5px rgba(255, 255, 255, 0.7);
 }
 .task-box {
   margin: auto;
@@ -110,8 +107,8 @@ main {
   border-radius: 20px;
   background-color: #e0e0e0;
   margin-top: 20px;
-  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2), 
-  inset -3px -3px 5px rgba(255, 255, 255, 0.7); 
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 5px rgba(255, 255, 255, 0.7);
   padding: 40px 40px;
   overflow: hidden;
 }
@@ -126,45 +123,40 @@ main {
   color: #555555;
 }
 
-
 .task-box input:focus {
   border: none;
   outline: none;
 }
 
 .new-task-input {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .ligne {
-    margin-block: 10px 40px;
-    height: 0.5px;
-    width: 25%;
-    background-color: #555555;
+  margin-block: 10px 40px;
+  height: 0.5px;
+  width: 25%;
+  background-color: #555555;
 }
 
-.description{
-    font-size: 1.5rem;
-    color: #555555;
-    opacity: 50%;
+.description {
+  font-size: 1.5rem;
+  color: #555555;
+  opacity: 50%;
 }
-
-
 
 .date {
-    font-size: 1.5rem;
-    margin-top: 40px;
-    gap: 44px;
-   
+  font-size: 1.5rem;
+  margin-top: 40px;
+  gap: 44px;
 }
-
 
 .btn_ajouter {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 20px auto 0 auto;
-  width: 144px;
+  width: 144px !important;
   height: 59px;
   border-radius: 50px;
   font-size: 1.5rem;
@@ -172,21 +164,19 @@ main {
   border: none;
   background-color: #e0e0e0;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
-     -3px -3px 5px
-      rgba(255, 255, 255, 0.7);
+    -3px -3px 5px rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
 .btn_ajouter.inset {
-      box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-        inset -3px -3px 5px rgba(255, 255, 255, 0.7);
-    }
-
-    .btn_ajouter:active {
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-             inset -3px -3px 5px rgba(255, 255, 255, 0.7);
-}   
+    inset -3px -3px 5px rgba(255, 255, 255, 0.7);
+}
 
+.btn_ajouter:active {
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 5px rgba(255, 255, 255, 0.7);
+}
 
 /* Container tâche a realiser */
 
@@ -197,7 +187,7 @@ main {
   margin: AUTO;
   margin-top: 80px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
-  -3px -3px 5px rgba(255, 255, 255, 0.7);
+    -3px -3px 5px rgba(255, 255, 255, 0.7);
   border-radius: 40px;
   padding: 30px;
 }
@@ -218,36 +208,35 @@ h2 {
 }
 
 .taches {
-    display: flex;
-    justify-content: space-between;
-    box-shadow:3px 3px 5px rgba(0, 0, 0, 0.2),
-     -3px -3px 5px
-      rgba(255, 255, 255, 0.7);
-      border-radius: 20px;
-      padding: 30px;
-      margin-top: 40px;
-      gap: 30px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
+    -3px -3px 5px rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 40px;
+  gap: 30px;
 }
 
 .taches p {
-    font-size: 1.5rem;
-    color: #555555;
-    opacity: 33%;
-    margin-top: 20px;
+  font-size: 1.5rem;
+  color: #555555;
+  opacity: 33%;
+  margin-top: 20px;
 }
 
 .title_calendar {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;  
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.trash_edit{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+.trash_edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 /* Tache réalisée */
@@ -256,10 +245,10 @@ h2 {
   width: 50%;
   min-width: 450px;
   margin: auto;
-  background-color:#e0e0e0;
+  background-color: #e0e0e0;
   margin-top: 80px;
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-             inset -3px -3px 5px rgba(255, 255, 255, 0.7);
+    inset -3px -3px 5px rgba(255, 255, 255, 0.7);
   border-radius: 40px;
   padding: 30px;
 }
@@ -269,7 +258,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
-             inset -3px -3px 5px rgba(255, 255, 255, 0.7);
+    inset -3px -3px 5px rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   padding: 30px;
   margin-top: 40px;

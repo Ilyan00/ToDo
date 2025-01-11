@@ -24,7 +24,7 @@ namespace inscription {
 
         if (result.success) {
           // Redirection vers la page d'ajout de tâches si la connexion est réussie
-          window.location.href = "./form_task_add";
+          window.location.href = "./todo";
         } else {
           // Sinon on affiche l'erreur
           const message_error = document.getElementById("error-connexion");

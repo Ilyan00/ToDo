@@ -20,10 +20,11 @@ namespace add_task {
 
       if (response) {
         const result = await response.json();
+        console.log(result);
 
         if (result.success) {
           // Recharge la page en cas de success
-          window.location.href = "./form_task_add";
+          window.location.href = "./todo";
         } else {
           // Sinon on affiche l'erreur
           const message_error = document.getElementById("error-task");

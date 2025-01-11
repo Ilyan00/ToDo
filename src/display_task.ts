@@ -1,7 +1,7 @@
 namespace task {
   // fonction pour modifier une tache
   const update_task = (taskElement: HTMLElement) => {
-    const paragraphs = taskElement.querySelectorAll("p.editable");
+    const paragraphs = taskElement.querySelectorAll("p.editable, h2.editable");
 
     paragraphs.forEach((p) => {
       // Modification des textes en input
@@ -119,8 +119,8 @@ namespace task {
   };
 
   const change_status = async (
-    editButton: HTMLButtonElement,
-    deleteButton: HTMLButtonElement,
+    editButton: HTMLImageElement,
+    deleteButton: HTMLImageElement,
     taskElement: HTMLElement,
     statusInput: HTMLInputElement,
     container: HTMLElement,
@@ -132,13 +132,17 @@ namespace task {
 
     // Si les boutons n'existent pas, les créer dynamiquement
     if (!editButton || !deleteButton) {
-      NeweditButton = document.createElement("button");
+      NeweditButton = document.createElement("img");
       NeweditButton.classList.add("edit-btn");
-      NeweditButton.textContent = "Modifier les informations";
+      NeweditButton.src = "./assets/img/edit-svgrepo-com (1).svg";
+      NeweditButton.alt = "";
+      NeweditButton.width = 45;
 
-      NewdeleteButton = document.createElement("button");
+      NewdeleteButton = document.createElement("img");
       NewdeleteButton.classList.add("delete-btn");
-      NewdeleteButton.textContent = "Supprimer la tâche";
+      NewdeleteButton.src = "./assets/img/trash.svg";
+      NewdeleteButton.alt = "";
+      NewdeleteButton.width = 30;
 
       NewdeleteButton?.addEventListener("click", () => {
         delete_task(taskElement);
@@ -222,20 +226,16 @@ namespace task {
   const displayTasks = async () => {
     const tasks = await getTasks();
 
-    if (!tasks || tasks.length === 0) {
-      const all_task_container = document.querySelector(".all-task");
-      if (all_task_container) {
-        all_task_container.innerHTML = "Aucune tâche à afficher.";
-      }
-      return;
-    }
-
     const container = document.getElementById("tasks-container");
     const container_done = document.getElementById("tasks-done-container");
     const template = document.getElementsByClassName("task-template")[0];
-
+    console.log(container, container_done);
     if (container && container_done && template) {
-      container.innerHTML = "";
+      container.innerHTML = `
+        <h2>Tâche à réaliser</h2>
+        <div class="barre"></div>
+      `;
+
       tasks.forEach((task: any) => {
         // Changement des informations
         const taskCard = template.cloneNode(true) as HTMLElement;

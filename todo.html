@@ -1,91 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task&Done</title>
-    <link rel="stylesheet" href="./src/css/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
     <header>
-        <nav class="navbar">
-            <div class="logo">
-                
-                <img src="./src/assets/img/Logowhite.svg" alt="Logo Tick&Done" width="48px">
-                <p class="text-logo">Tick<span class="lightgrey">&</span>Done</p>
+      <nav class="navbar">
+        <div class="logo">
+          <img
+            src="./assets/img/Logowhite.svg"
+            alt="Logo Tick&Done"
+            width="48px"
+          />
+          <p class="text-logo">Tick<span class="lightgrey">&</span>Done</p>
+        </div>
 
-            </div>
-            
-            <div class="param_box">
-                <img src="./src/assets/img/settings_white.svg" alt="" width="30px">
-            </div>
-        </nav>
+        <div class="param_box">
+          <img src="./assets/img/settings_white.svg" alt="" width="30px" />
+        </div>
+      </nav>
     </header>
 
     <main>
-        <div class="tache_container">
-            <h2>Entrez votre tâche</h2>
-            
-            <div class="task-box">
-            
-                <input type="text" class="new-task-input" name="" id="titre_tache" value="Titre" >
-                <div class="ligne"></div>
-                <input type="text" name="" id="" value="Description" class="description">
-                <div class="choose_date">
-                    <input type="date" id="myDate" class="date">
-                </div>
-                
+      <div class="tache_container">
+        <h2>Entrez votre tâche</h2>
+        <p id="error-task"></p>
+
+        <form class="task-box form-task">
+          <input
+            type="text"
+            class="new-task-input"
+            name="title"
+            id="title"
+            value="Titre"
+          />
+          <div class="ligne"></div>
+          <input
+            type="text"
+            name="description"
+            id="description"
+            value="Description"
+            class="description"
+          />
+          <div class="choose_date">
+            <input type="date" id="deadline" name="deadline" class="date" />
+          </div>
+          <input type="submit" class="btn_ajouter" value="Ajouter" />
+        </form>
+      </div>
+
+      <div class="realiser_container" id="tasks-container">
+        <h2>Tâche à realiser</h2>
+        <div class="barre"></div>
+
+        <div class="taches task-template">
+          <input
+            type="checkbox"
+            name="status"
+            id="status-input"
+            class="status-input"
+          />
+
+          <div>
+            <div class="title_calendar">
+              <h2 class="editable title">Title Task</h2>
+              <div style="display: flex">
+                <p class="editable date"></p>
+                <img src="./assets/img/calendar.svg" alt="" width="30px" />
+              </div>
             </div>
+            <p class="editable description">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias,
+              quas.
+            </p>
+          </div>
 
-            <button class="btn_ajouter"><p>Ajouter</p></button>
+          <div class="trash_edit">
+            <img
+              class="edit-btn"
+              src="./assets/img/edit-svgrepo-com (1).svg"
+              alt=""
+              width="45px"
+            />
+            <img
+              class="delete-btn"
+              src="./assets/img/trash.svg"
+              alt=""
+              width="30px"
+            />
+          </div>
         </div>
+      </div>
 
-        <div class="realiser_container">
-            <h2>Tâche à realiser</h2>
-            <div class="barre"></div>
-
-
-            <div class="taches">
-                <img src="./src/assets/img/unchecked.svg" alt="" width="30px">
-
-
-                <div>
-                    <div class="title_calendar">
-                    <h2>Title Task</h2>
-                    <img src="./src/assets/img/calendar.svg" alt="" width="30px">
-                    </div>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias, quas.</p>
-                </div>
-
-                <div class="trash_edit">
-                    <img src="./src/assets/img/edit-svgrepo-com (1).svg" alt="" width="45px">
-                    <img src="./src/assets/img/trash.svg" alt="" width="30px">
-                </div>
-
-
-            </div>
-        </div>
-
-        <div class="done_container">
-            <h2>Tâche réalisée</h2>
-            <div class="barre"></div>
-            <div class="done_box">
-                <div class="title_checked">
-                    <img src="./src/assets/img/checked-tick-svgrepo-com.svg" alt="" width="30px">
-                    <h2>Title Task</h2>
-                </div>
-                
-                <div class="trash_edit">
-                    <img src="./src/assets/img/edit-svgrepo-com (1).svg" alt="" width="45px">
-                    <img src="./src/assets/img/trash.svg" alt="" width="30px">
-                </div>
-
-
-
-            </div>
-        </div>
-
+      <div class="done_container" id="tasks-done-container">
+        <h2>Tâche réalisée</h2>
+        <div class="barre"></div>
+      </div>
     </main>
-
-</body>
+    <script src="./add_task.js"></script>
+    <script src="./display_task.js"></script>
+  </body>
 </html>

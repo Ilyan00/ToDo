@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../assets/Fonts/Carlito-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Carlito";
+  src: url("../assets/Fonts/Carlito-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Carlito";
+  src: url("../assets/Fonts/Carlito-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Carlito";
+  src: url("../assets/Fonts/Carlito-BoldItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+body {
+  font-family: "Carlito", sans-serif;
+  color: #555555;
+  background-color: #e0e0e0;
+}
+
+/* HEADER */
+
+header {
+  padding-inline: 60px;
+  height: 113px;
+  width: 100%;
+  background-color: #444141;
+  display: flex;
+  align-items: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 2rem;
+  gap: 26px;
+}
+
+.lightgrey {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.param_box {
+  width: 49px;
+  height: 49px;
+  background-color: #555;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
+    -2px -2px 5px rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.param_box:active {
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+}
+
+/* MAIN */
+main {
+  padding: 86px 0;
+  background-color: #e0e0e0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+main div {
+  width: 450px;
+  background-color: #e0e0e0;
+  border-radius: 40px;
+  padding: 20px 50px;
+  margin: auto;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),
+    -3px -3px 5px rgba(255, 255, 255, 0.7);
+  height: fit-content;
+}
+
+main div form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

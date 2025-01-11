@@ -22,7 +22,7 @@ namespace register {
 
         if (result.success) {
           // Redirection vers la page d'ajout de tâche
-          window.location.href = "./form_task_add";
+          window.location.href = "/todo";
         } else {
           // Sinon on affiche le message d'erreur
           const message_error = document.getElementById("error-connexion");

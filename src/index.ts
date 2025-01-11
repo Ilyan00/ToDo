@@ -13,10 +13,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static(path.join(__dirname, "../src")));
 // Route pour gérer la connexion
 app.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -412,8 +409,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Afficher la page des ToDo
-app.get("/form_task_add", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../", "form_task_add.html"));
+app.get("/todo", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../", "todo.html"));
 });
 
 // Lancer le serv
