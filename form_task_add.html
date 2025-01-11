@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion</title>
+  </head>
+  <body>
+    <h2>Ajout une task</h2>
+    <p id="error-task"></p>
+    <form id="form-task" class="form-task">
+      <label for="title">Title :</label>
+      <input type="text" id="title" name="title" required />
+      <br />
+      <label for="description">description :</label>
+      <input type="text" id="description" name="description" required />
+      <br />
+      <label for="deadline">deadline :</label>
+      <input type="date" id="deadline" name="deadline" required />
+      <br />
+      <button type="submit">Se connecter</button>
+    </form>
+    <div class="all-task">
+      <h2>pas done</h2>
+      <div class="task-template" style="display: none">
+        <input
+          type="checkbox"
+          name="status"
+          id="status-input"
+          class="status-input"
+        />
+        <p class="editable title"></p>
+        <p class="editable description"></p>
+        <p class="editable date"></p>
+        <button class="edit-btn">Modifier les informations</button>
+        <button class="delete-btn">Supprimer la tache</button>
+      </div>
+      <div id="tasks-container"></div>
+      <h2>done</h2>
+      <div id="tasks-done-container"></div>
+    </div>
+    <script src="./add_task.js"></script>
+    <script src="./display_task.js"></script>
+  </body>
+</html>
